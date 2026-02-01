@@ -1,0 +1,56 @@
+name: Setup course registration
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+    paths:
+      - 'params.json'
+    branches:
+      - main
+
+permissions: write-all
+
+jobs:
+  register:
+    runs-on: ubuntu-latest
+    env:
+      TITLE: ${{ github.event.pull_request.title }}
+    steps:
+      - name: Check pull request title
+        run: |
+          echo "PR title: $TITLE"
+
+          if [[ "$TITLE" != *"Регистрация"* ]]; then
+            echo "❌ Pull request title must contain 'Регистрация'"
+            exit 1
+          fi
+
+      - name: Parsing your PR title for lab number
+        run: |
+          for VAR in 6311 6312 6313
+          do
+              if (echo $TITLE | grep -iqF "$VAR" ); then
+                  echo "GROUP=$VAR" >> "$GITHUB_ENV"
+                  break
+              fi      
+          done
+
+      - name: Checking your group number
+        run: |
+          if [[ $GROUP == '' ]]; then
+              echo "Your PR caption is not composed correctly"
+              exit 1
+          fi
+          echo Your group was parsed correctly - ${{ env.GROUP }}
+
+      - name: Setting PR labels
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: |
+            Registration
+
+      - name: Setting reviewer
+        uses: AveryCameronUofR/add-reviewer-gh-action@1.0.3
+        with:
+          reviewers: "prafdin"
+          token: ${{ secrets.GITHUB_TOKEN }}
