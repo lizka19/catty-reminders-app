@@ -78,8 +78,8 @@ jobs:
         uses: prafdin/check-assignment@main
         with:
           params_file: 'params.json'
-          assignee_login: ${{ vars.ASSIGNEE_LOGIN }}
-          repo_name: ${{ vars.REPO_NAME }}
+          assignee_login: ${{ github.event.pull_request.user.login }}
+          repo_name: ${{ github.event.pull_request.head.repo.full_name }}
           sa_ssh_pkey: ${{ secrets.SSH_PRIVATE_KEY }}
           branch_name: ${{ github.event.pull_request.head.ref }}
           github_token: ${{ secrets.SA_GITHUB_TOKEN }}
