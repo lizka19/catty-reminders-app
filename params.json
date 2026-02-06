@@ -10,5 +10,10 @@
       "id": "sa3000udp",
       "app": "catty-reminders-app"
     }
+    {
+      "login": "Velesikamid",
+      "id": "kiselev",
+      "app": "catty-reminders-app"
+    }
   ]
 }
