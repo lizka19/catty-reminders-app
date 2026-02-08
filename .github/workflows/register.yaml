@@ -54,3 +54,12 @@ jobs:
         with:
           reviewers: "prafdin"
           token: ${{ secrets.GITHUB_TOKEN }}
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate JSON schema
+        run: |
+          pipx install check-jsonschema
+          pipx run check-jsonschema --schemafile ./schema-params.json ./params.json
