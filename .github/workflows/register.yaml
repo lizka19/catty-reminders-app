@@ -58,8 +58,35 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: base
+
+      - uses: actions/checkout@v4
+        with:
+          path: pr
+          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Validate JSON schema
         run: |
           pipx install check-jsonschema
-          pipx run check-jsonschema --schemafile ./schema-params.json ./params.json
+          pipx run check-jsonschema --schemafile ./base/schema-params.json ./pr/params.json
+
+      - name: Check users diff
+        run: |
+          BASE_FILE="base/params.json"
+          PR_FILE="pr/params.json"
+
+          BASE_COUNT=$(jq '.users | length' "$BASE_FILE")
+          PR_COUNT=$(jq '.users | length' "$PR_FILE")
+
+          echo "User count before: $BASE_COUNT"
+          echo "Users count after: $PR_COUNT"
+
+          DIFF=$((PR_COUNT - BASE_COUNT))
+
+          if [ "$DIFF" -ne 1 ]; then
+            echo "❌ Invalid users change: expected +1, got $DIFF"
+            exit 1
+          fi
+
+          echo "✅ Users count increased by exactly 1"
