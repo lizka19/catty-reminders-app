@@ -2,7 +2,7 @@ name: 'Run integration tests'
 
 on:
   pull_request_target:
-    types: [opened, reopened]
+    types: [opened, reopened, synchronize]
     branches:
       - catty-reminders-app
 
