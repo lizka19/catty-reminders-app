@@ -14,6 +14,11 @@
       "login": "Velesikamid",
       "id": "kiselev",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "sh1kaff",
+      "id": "sheff",
+      "app": "catty-reminders-app"
     }
   ]
 }
