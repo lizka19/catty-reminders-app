@@ -47,7 +47,7 @@
           },
           "app": {
             "type": "string",
-            "enum": ["catty-reminders-app", "static-website-example", "Csharp-example"]
+            "enum": ["catty-reminders-app", "website-example", "csharp-example"]
           }
         },
         "additionalProperties": false
