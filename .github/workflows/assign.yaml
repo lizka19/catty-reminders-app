@@ -56,14 +56,14 @@ jobs:
             In progress
 
       - name: Setting reviewer
-        if:  env.GROUP == '6311'
+        if:  env.GROUP == '6313'
         uses: AveryCameronUofR/add-reviewer-gh-action@1.0.3
         with:
           reviewers: "prafdin"
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setting reviewer
-        if: env.GROUP == '6312' || env.GROUP == '6313'
+        if: env.GROUP == '6311' || env.GROUP == '6312'
         uses: AveryCameronUofR/add-reviewer-gh-action@1.0.3
         with:
           reviewers: "danlla"
