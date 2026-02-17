@@ -50,7 +50,7 @@ jobs:
           webhooks_devops_assignment: true
 
       - name: Run check for github_actions_assignment
-        if:  env.ASSIGNMENT_CHECK == 'webhooks_devops_assignment'
+        if:  env.ASSIGNMENT_CHECK == 'github_actions_assignment'
         uses: prafdin/check-assignment@main
         with:
           params_file: 'params.json'
