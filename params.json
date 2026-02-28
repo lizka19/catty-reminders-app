@@ -29,6 +29,11 @@
       "login": "danlla",
       "id": "glazkov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "APMorozov",
+      "id": "morozov",
+      "app": "catty-reminders-app"
     }
   ]
 }
