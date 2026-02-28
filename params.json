@@ -34,6 +34,11 @@
       "login": "APMorozov",
       "id": "morozov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "AndreyPreobrazhenskiy",
+      "id": "preobrazhenskiy",
+      "app": "catty-reminders-app"
     }
   ]
 }
