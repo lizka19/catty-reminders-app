@@ -69,6 +69,11 @@
       "login": "TimurMif",
       "id": "miftyahov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "naumoffIE",
+      "id": "naumov",
+      "app": "catty-reminders-app"
     }
   ]
 }
