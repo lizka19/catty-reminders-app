@@ -2,7 +2,7 @@ name: 'Run integration tests'
 
 on:
   pull_request_target:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened]
     branches:
       - csharp-example
       - website-example
