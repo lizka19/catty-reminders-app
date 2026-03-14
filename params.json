@@ -119,6 +119,11 @@
       "login": "ilyanikoniko",
       "id": "nikolaev",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "IMPULSE-LAB-CRYPTO",
+      "id": "simonov",
+      "app": "catty-reminders-app"
     }
   ]
 }
