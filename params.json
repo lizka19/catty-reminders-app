@@ -124,6 +124,11 @@
       "login": "IMPULSE-LAB-CRYPTO",
       "id": "simonov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "Deemeed",
+      "id": "chentsov",
+      "app": "catty-reminders-app"
     }
   ]
 }
