@@ -139,6 +139,11 @@
       "login": "keshacheshek",
       "id": "golosov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "sofiastepanova",
+      "id": "stepanova",
+      "app": "catty-reminders-app"
     }
   ]
 }
