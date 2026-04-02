@@ -159,6 +159,11 @@
       "login": "Barnaeva",
       "id": "barnaeva",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "IvanDelibaltov",
+      "id": "delibaltov",
+      "app": "catty-reminders-app"
     }
   ]
 }
