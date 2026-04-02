@@ -91,6 +91,14 @@ jobs:
           pipx install check-jsonschema
           pipx run check-jsonschema --schemafile ./base/schema-params.json ./pr/params.json
 
+      - name: Validate JSON formatting
+        shell: bash
+        run: |
+          if ! diff -u ./pr/params.json <(jq . ./pr/params.json); then
+            echo "JSON is not properly formatted"
+            exit 1
+          fi
+
       - name: Check users diff
         run: |
           BASE_FILE="base/params.json"
