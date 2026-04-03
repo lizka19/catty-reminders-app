@@ -164,6 +164,11 @@
       "login": "IvanDelibaltov",
       "id": "delibaltov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "kilopevt",
+      "id": "meshkov",
+      "app": "catty-reminders-app"
     }
   ]
 }
