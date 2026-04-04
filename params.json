@@ -169,6 +169,11 @@
       "login": "kilopevt",
       "id": "meshkov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "YaroslavFomenko",
+      "id": "fomenko",
+      "app": "catty-reminders-app"
     }
   ]
 }
