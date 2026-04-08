@@ -2,7 +2,7 @@
   "proxy": "course.prafdin.ru",
   "sa_login": "SA3000UDP",
   "sa_mail": "pravdin.web@gmail.com",
-  "timeout": 180,
+  "timeout": 450,
   "poll_interval": 15,
   "users": [
     {
