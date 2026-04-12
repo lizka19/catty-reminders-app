@@ -199,6 +199,11 @@
       "login": "victonaizer",
       "id": "popov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "UmarBis",
+      "id": "bisultanov",
+      "app": "catty-reminders-app"
     }
   ]
 }
