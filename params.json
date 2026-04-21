@@ -234,6 +234,11 @@
       "login": "Dester",
       "id": "nosov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "KozlovDan",
+      "id": "kozlov",
+      "app": "catty-reminders-app"
     }
   ]
 }
