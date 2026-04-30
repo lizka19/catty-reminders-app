@@ -289,6 +289,11 @@
       "login": "anzorcode05",
       "id": "magomedagaev",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "VladaGusakova",
+      "id": "gusakova",
+      "app": "catty-reminders-app"
     }
   ]
 }
