@@ -314,6 +314,11 @@
       "login": "an664",
       "id": "mas",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "https-katice",
+      "id": "krivonosova",
+      "app": "catty-reminders-app"
     }
   ]
 }
