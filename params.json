@@ -324,6 +324,11 @@
       "login": "https-katice",
       "id": "krivonosova",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "NITSENSE",
+      "id": "kostsov",
+      "app": "catty-reminders-app"
     }
   ]
 }
