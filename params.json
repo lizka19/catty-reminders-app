@@ -334,6 +334,11 @@
       "login": "nikzavadskiy",
       "id": "zavadskiy",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "Cherakaev",
+      "id": "cherakaev",
+      "app": "catty-reminders-app"
     }
   ]
 }
