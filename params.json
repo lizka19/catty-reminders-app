@@ -364,6 +364,11 @@
       "login": "zurmes",
       "id": "fadeev",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "Tyty-land",
+      "id": "shankin",
+      "app": "catty-reminders-app"
     }
   ]
 }
