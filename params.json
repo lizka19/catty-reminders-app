@@ -369,6 +369,11 @@
       "login": "Tyty-land",
       "id": "shankin",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "Jupiter0303",
+      "id": "loshmankin",
+      "app": "csharp-example"
     }
   ]
 }
