@@ -6,6 +6,11 @@
   "poll_interval": 15,
   "users": [
     {
+      "login": "Ke1tas",
+      "id": "inozemtsev",
+      "app": "catty-reminders-app"
+    },
+    {
       "login": "SA3000UDP",
       "id": "sa3000udp",
       "app": "catty-reminders-app"
