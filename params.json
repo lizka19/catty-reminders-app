@@ -386,6 +386,11 @@
       "app": "csharp-example"
     },
     {
+      "login": "ctwoth",
+      "id": "dubrovin",
+      "app": "catty-reminders-app"
+    },
+    {
       "login": "Getsomelight",
       "id": "volyanyuk",
       "app": "catty-reminders-app"
