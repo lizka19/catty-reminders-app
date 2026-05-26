@@ -3,9 +3,11 @@ name: CI
 on:
   workflow_dispatch:
   push:
-    branches: [ "lab2" ]
+    branches:
+      - lab2
   pull_request:
-    branches: [ "lab2" ]
+    branches: 
+      - lab2
 
 jobs:
   test:
