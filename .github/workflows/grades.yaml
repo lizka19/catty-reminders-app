@@ -11,7 +11,7 @@ on:
 permissions: write-all
 
 jobs:
-  register:
+  check-title:
     runs-on: ubuntu-latest
     env:
       TITLE: ${{ github.event.pull_request.title }}
@@ -63,9 +63,8 @@ jobs:
 
       - name: Check number of changed files
         env:
-          CHANGED_FILES_COUNT: ${{ steps.changed-files.outputs.output_modified_files_count }}
+          CHANGED_FILES_COUNT: ${{ steps.changed-files.outputs.all_modified_files_count }}
         run: |
-          echo "$CHANGED_FILES_COUNT"
           if [ "$CHANGED_FILES_COUNT" -ne 1 ]; then
             echo "❌ Invalid lines change: expected 1, got $DIFF"
             exit 1
