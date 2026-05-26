@@ -50,9 +50,17 @@ jobs:
             Grade
 
       - name: Setting reviewer
+        if:  env.GROUP == '6313'
         uses: AveryCameronUofR/add-reviewer-gh-action@1.0.3
         with:
           reviewers: "prafdin"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setting reviewer
+        if: env.GROUP == '6311' || env.GROUP == '6312'
+        uses: AveryCameronUofR/add-reviewer-gh-action@1.0.3
+        with:
+          reviewers: "danlla"
           token: ${{ secrets.GITHUB_TOKEN }}
   validate:
     runs-on: ubuntu-latest
