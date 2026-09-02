@@ -399,6 +399,11 @@
       "login": "SevaZimov",
       "id": "zimovets",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "VictorGolenkov",
+      "id": "golenkov",
+      "app": "catty-reminders-app"
     }
   ]
 }
