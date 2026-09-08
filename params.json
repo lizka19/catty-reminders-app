@@ -404,6 +404,11 @@
       "login": "VictorGolenkov",
       "id": "golenkov",
       "app": "catty-reminders-app"
+    },
+    {
+      "login": "MaximAlmaev",
+      "id": "almaev",
+      "app": "catty-reminders-app"
     }
   ]
 }
