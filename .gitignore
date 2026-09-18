@@ -1,7 +1,7 @@
-__pycache__/
-*.py[cod]
+.idea/
 venv/
-.env
-commit_hash.txt
-.pytest_cache/
+__pycache__/
+*.pyc
 *.log
+reminder_db.json
+.env
