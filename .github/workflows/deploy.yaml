@@ -1,0 +1,140 @@
+name: CD
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+env:
+  SSH_HOST: course.prafdin.space
+  SSH_PORT: "3109"
+  SSH_USER: password_123
+
+jobs:
+  deploy:
+    name: Build and deploy release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out release
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          fetch-depth: 0
+
+      - name: Build release archive
+        run: |
+          DEPLOY_SHA="$(git rev-parse HEAD)"
+          if [[ "$DEPLOY_SHA" != "$GITHUB_SHA" ]]; then
+            echo "Checked out SHA does not match release SHA" >&2
+            exit 1
+          fi
+          echo "DEPLOY_SHA=$DEPLOY_SHA" >> "$GITHUB_ENV"
+
+          tar \
+            --exclude=.git \
+            --exclude=.github \
+            --exclude=.deploy \
+            --exclude=venv \
+            --exclude=app.log \
+            -czf "$RUNNER_TEMP/catty-release.tar.gz" .
+
+      - name: Prepare SSH connection
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          test -n "$SSH_PRIVATE_KEY"
+          install -d -m 700 "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/github_actions"
+          chmod 600 "$HOME/.ssh/github_actions"
+          ssh-keyscan -T 10 -p "$SSH_PORT" -H "$SSH_HOST" >> "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Copy release to virtual machine
+        run: |
+          REMOTE_ARCHIVE="/tmp/catty-release-${GITHUB_RUN_ID}.tar.gz"
+          echo "REMOTE_ARCHIVE=$REMOTE_ARCHIVE" >> "$GITHUB_ENV"
+          scp -P "$SSH_PORT" -i "$HOME/.ssh/github_actions" \
+            "$RUNNER_TEMP/catty-release.tar.gz" \
+            "$SSH_USER@$SSH_HOST:$REMOTE_ARCHIVE"
+
+      - name: Deploy release
+        run: |
+          ssh -p "$SSH_PORT" -i "$HOME/.ssh/github_actions" \
+            "$SSH_USER@$SSH_HOST" \
+            "bash -s -- '$DEPLOY_SHA' '$REMOTE_ARCHIVE'" <<'REMOTE_SCRIPT'
+          set -Eeuo pipefail
+
+          DEPLOY_SHA="$1"
+          ARCHIVE_PATH="$2"
+
+          APP_ROOT="/home/password_123/Desktop/Catty/catty-reminders-app"
+          PYTHON="$APP_ROOT/venv/bin/python"
+          RELEASE_DIR="$APP_ROOT/.deploy/releases/$DEPLOY_SHA"
+          APP_LOG="$APP_ROOT/app.log"
+
+          if [[ ! "$DEPLOY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+              echo "Invalid deploy SHA: $DEPLOY_SHA" >&2
+              exit 1
+          fi
+
+          case "$ARCHIVE_PATH" in
+              /tmp/catty-release-*.tar.gz) ;;
+              *)
+                  echo "Invalid archive path: $ARCHIVE_PATH" >&2
+                  exit 1
+                  ;;
+          esac
+
+          if [[ ! -x "$PYTHON" ]]; then
+              echo "Python virtual environment not found: $PYTHON" >&2
+              exit 1
+          fi
+
+          mkdir -p "$RELEASE_DIR"
+          tar -xzf "$ARCHIVE_PATH" -C "$RELEASE_DIR"
+          rm -f -- "$ARCHIVE_PATH"
+
+          cd "$RELEASE_DIR"
+
+          pkill -f '[u]vicorn app\.main:app' 2>/dev/null || true
+          pkill -f '[p]ython(3)? .*app\.py' 2>/dev/null || true
+
+          for _ in {1..10}; do
+              if ! pgrep -f '[u]vicorn app\.main:app' >/dev/null; then
+                  break
+              fi
+              sleep 1
+          done
+
+          DEPLOY_REF="$DEPLOY_SHA" nohup "$PYTHON" -m uvicorn app.main:app \
+              --host 0.0.0.0 \
+              --port 8181 \
+              > "$APP_LOG" 2>&1 < /dev/null &
+
+          NEW_PID=$!
+
+          for _ in {1..30}; do
+              if ! kill -0 "$NEW_PID" 2>/dev/null; then
+                  echo "Application exited unexpectedly" >&2
+                  tail -n 50 "$APP_LOG" >&2 || true
+                  exit 1
+              fi
+              PAGE="$(curl --silent --fail --location http://127.0.0.1:8181/login || true)"
+              if [[ "$PAGE" == *"content=\"$DEPLOY_SHA\""* ]]; then
+                  echo "Deploy completed: $DEPLOY_SHA"
+                  exit 0
+              fi
+              sleep 1
+          done
+
+          echo "Application did not become ready" >&2
+          tail -n 50 "$APP_LOG" >&2 || true
+          exit 1
+          REMOTE_SCRIPT
+
+      - name: Remove SSH private key
+        if: always()
+        run: rm -f "$HOME/.ssh/github_actions"
