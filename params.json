@@ -1,0 +1,414 @@
+{
+  "proxy": "course.prafdin.space",
+  "sa_login": "SA3000UDP",
+  "sa_mail": "pravdin.web@gmail.com",
+  "timeout": 450,
+  "poll_interval": 15,
+  "users": [
+    {
+      "login": "Ke1tas",
+      "id": "inozemtsev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "SA3000UDP",
+      "id": "sa3000udp",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Velesikamid",
+      "id": "kiselev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "AlexChirkova",
+      "id": "chirkova",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "sh1kaff",
+      "id": "sheff",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "mappy12",
+      "id": "zhestkov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "danlla",
+      "id": "glazkov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "APMorozov",
+      "id": "morozov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "AndreyPreobrazhenskiy",
+      "id": "preobrazhenskiy",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "VichurinNik",
+      "id": "vichurin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "dmitrievsn",
+      "id": "dmitriev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "limekh",
+      "id": "milyokhin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Rovver52",
+      "id": "abdulkhanov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Artem362a",
+      "id": "zheleznov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "TimurMif",
+      "id": "miftyahov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "naumoffIE",
+      "id": "naumov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "D1ma750",
+      "id": "byneev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "goganizmrulit40",
+      "id": "yaroslavtsev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Psevd00",
+      "id": "astafev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Pyshisha",
+      "id": "ryzkov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "catchtimings",
+      "id": "chindina",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Vadimkadkdoofjf",
+      "id": "petrov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Matvey1338",
+      "id": "uhtverov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "yui1337",
+      "id": "golunov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "KiRiLldrs",
+      "id": "shtengauer",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "ilyanikoniko",
+      "id": "nikolaev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "IMPULSE-LAB-CRYPTO",
+      "id": "simonov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Deemeed",
+      "id": "chentsov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "keshacheshek",
+      "id": "golosov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "sofiastepanova",
+      "id": "stepanova",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Nika34V",
+      "id": "baranova",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "only-hell",
+      "id": "ladygin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Barnaeva",
+      "id": "barnaeva",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "IvanDelibaltov",
+      "id": "delibaltov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "kilopevt",
+      "id": "meshkov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "YaroslavFomenko",
+      "id": "fomenko",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "me1ax",
+      "id": "melnik",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "mzpdqk",
+      "id": "khramov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "ShureevK",
+      "id": "shureeev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "nprkhn",
+      "id": "nepryakhin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "victonaizer",
+      "id": "popov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "UmarBis",
+      "id": "bisultanov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "RenTogan",
+      "id": "mansurov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "SemeenS",
+      "id": "strebelev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Demonstinatord",
+      "id": "sergienko",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "vissstu",
+      "id": "chernikova",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "KuzminStanislav",
+      "id": "kuzmin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Dester",
+      "id": "nosov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "KozlovDan",
+      "id": "kozlov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "h0shi-tech",
+      "id": "nikishin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "chekulaev17",
+      "id": "chekulaev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Shureevk",
+      "id": "shureev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "SeredovaSophia",
+      "id": "seredova",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "AndreyPanakshin",
+      "id": "panakshin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "alvsbn",
+      "id": "alieva",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "DubovLeonid",
+      "id": "dubov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "exhaustion666",
+      "id": "sarychev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "anzorcode05",
+      "id": "magomedagaev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "VladaGusakova",
+      "id": "gusakova",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "RomaError5",
+      "id": "otyubrin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "andreyKruglovRes",
+      "id": "kruglovdev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "DANILA21-3",
+      "id": "cherkashin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Bauntyy",
+      "id": "chesnokov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "an664",
+      "id": "mas",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "freegotohell",
+      "id": "svyatkovskaya",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "https-katice",
+      "id": "krivonosova",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "NITSENSE",
+      "id": "kostsov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "nikzavadskiy",
+      "id": "zavadskiy",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Cherakaev",
+      "id": "cherakaev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "lizka19",
+      "id": "kolganowa",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "dmitri919",
+      "id": "malgin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Amirprogrammer689",
+      "id": "baimukashev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "avofl1ow",
+      "id": "tsvetkov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "zurmes",
+      "id": "fadeev",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Tyty-land",
+      "id": "shankin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Jupiter0303",
+      "id": "loshmankin",
+      "app": "csharp-example"
+    },
+    {
+      "login": "ctwoth",
+      "id": "dubrovin",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "Getsomelight",
+      "id": "volyanyuk",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "SevaZimov",
+      "id": "zimovets",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "VictorGolenkov",
+      "id": "golenkov",
+      "app": "catty-reminders-app"
+    },
+    {
+      "login": "MaximAlmaev",
+      "id": "almaev",
+      "app": "catty-reminders-app"
+    }
+  ]
+}
