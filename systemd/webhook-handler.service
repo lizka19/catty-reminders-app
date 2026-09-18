@@ -1,0 +1,12 @@
+[Unit]
+Description=Webhook Handler for Catty App
+After=network.target
+
+[Service]
+User=password_123
+WorkingDirectory=/home/password_123/webhook-handler
+ExecStart=/usr/bin/python3 /home/password_123/Desktop/Catty/catty-reminders-app/webhook_listener.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
