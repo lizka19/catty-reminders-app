@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User=password_123
 WorkingDirectory=/home/password_123/webhook-handler
-ExecStart=/usr/bin/python3 /home/password_123/Desktop/Catty/catty-reminders-app/webhook_listener.py
+ExecStart=/home/password_123/webhook-handler/venv/bin/python /home/password_123/webhook-handler/webhook_listener.py
 Restart=always
 
 [Install]
