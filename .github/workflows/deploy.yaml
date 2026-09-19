@@ -87,28 +87,39 @@ jobs:
 
           export DOCKER_CONFIG="$DOCKER_CONFIG_DIR"
 
+          echo "Pulling image: $IMAGE_REF"
           sudo docker pull "$IMAGE_REF"
 
-          echo "Stopping containers using port 8181..."
-          CONTAINERS_ON_PORT=$(sudo docker ps --filter "publish=8181" --format '{{.ID}}' || true)
+          echo "Stopping previous containers on port 8181..."
+          CONTAINERS_ON_PORT=$(sudo docker ps -q --filter "publish=8181" || true)
           if [[ -n "$CONTAINERS_ON_PORT" ]]; then
-              echo "Stopping: $CONTAINERS_ON_PORT"
+              echo "Containers on 8181: $CONTAINERS_ON_PORT"
               echo "$CONTAINERS_ON_PORT" | xargs -r sudo docker stop
               echo "$CONTAINERS_ON_PORT" | xargs -r sudo docker rm
           fi
 
-          sudo docker rm --force "$CONTAINER_NAME" 2>/dev/null || true
+          if sudo docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then
+              sudo docker stop "$CONTAINER_NAME" || true
+              sudo docker rm "$CONTAINER_NAME" || true
+          fi
 
           pkill -f '[u]vicorn app\.main:app' 2>/dev/null || true
-          pkill -f '[p]ython(3)? .*app\.py' 2>/dev/null || true
 
-          # Убедиться, что порт свободен
+          for _ in {1..10}; do
+              if ! sudo lsof -i :8181 >/dev/null 2>&1; then
+                  break
+              fi
+              echo "Waiting for port 8181 to be released..."
+              sleep 1
+          done
+
           if sudo lsof -i :8181 >/dev/null 2>&1; then
-              echo "Port 8181 still in use before start:" >&2
+              echo "ERROR: Port 8181 still in use after stopping containers" >&2
               sudo lsof -i :8181 >&2
               exit 1
           fi
 
+          echo "Starting new container from $IMAGE_REF"
           sudo docker run --detach \
               --name "$CONTAINER_NAME" \
               --restart unless-stopped \
@@ -124,7 +135,6 @@ jobs:
               fi
 
               PAGE="$(curl --silent --fail --location http://127.0.0.1:8181/login || true)"
-
               if [[ "$PAGE" == *"content=\"$DEPLOY_SHA\""* ]]; then
                   echo "Deploy completed: $IMAGE_REF"
                   exit 0
