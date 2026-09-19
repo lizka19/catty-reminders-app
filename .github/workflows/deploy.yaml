@@ -36,10 +36,9 @@ jobs:
       - name: Deploy via SSH
         env:
           DEPLOY_SHA: ${{ github.sha }}
-          GHCR_ACTOR: ${{ github.actor }}
+          GHCR_ACTOR: ${{ github.repository_owner }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Передаём токен через stdin, а аргументы — как аргументы SSH
           printf '%s\n' "$GHCR_TOKEN" | \
             ssh -p "$SSH_PORT" -i "$HOME/.ssh/github_actions" \
               -o BatchMode=yes -o IdentitiesOnly=yes \
@@ -54,7 +53,6 @@ jobs:
           CONTAINER_NAME="$4"
           GHCR_ACTOR="$5"
 
-          # Токен читаем из stdin (первая строка)
           read -r GHCR_TOKEN
 
           if [[ ! "$DEPLOY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
