@@ -39,12 +39,13 @@ jobs:
           GHCR_ACTOR: ${{ github.repository_owner }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          printf '%s\n' "$GHCR_TOKEN" | \
-            ssh -p "$SSH_PORT" -i "$HOME/.ssh/github_actions" \
+          # Токен и актор передаём через переменные окружения SSH-команды,
+          # чтобы docker login на VM не пытался читать пароль из stdin.
+          ssh -p "$SSH_PORT" -i "$HOME/.ssh/github_actions" \
               -o BatchMode=yes -o IdentitiesOnly=yes \
               -o StrictHostKeyChecking=yes -o ConnectTimeout=15 \
               "$SSH_USER@$SSH_HOST" \
-              "bash -s -- '$DEPLOY_SHA' '$IMAGE_NAME' '$APP_DIR' '$CONTAINER_NAME' '$GHCR_ACTOR'" <<'REMOTE_SCRIPT'
+              "GHCR_TOKEN='$GHCR_TOKEN' bash -s -- '$DEPLOY_SHA' '$IMAGE_NAME' '$APP_DIR' '$CONTAINER_NAME' '$GHCR_ACTOR'" <<'REMOTE_SCRIPT'
           set -Eeuo pipefail
 
           DEPLOY_SHA="$1"
@@ -53,7 +54,10 @@ jobs:
           CONTAINER_NAME="$4"
           GHCR_ACTOR="$5"
 
-          read -r GHCR_TOKEN
+          if [[ -z "${GHCR_TOKEN:-}" ]]; then
+              echo "GHCR_TOKEN is empty" >&2
+              exit 1
+          fi
 
           if [[ ! "$DEPLOY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
               echo "Invalid deployment SHA: $DEPLOY_SHA" >&2
