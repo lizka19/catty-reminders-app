@@ -6,3 +6,4 @@ __pycache__/
 reminder_db.json
 .env
 .deploy/
+.idea/
