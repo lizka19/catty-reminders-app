@@ -12,25 +12,16 @@ env:
   SSH_HOST: course.prafdin.space
   SSH_PORT: "3109"
   SSH_USER: password_123
+  APP_DIR: /home/password_123/Desktop/Catty/catty-reminders-app
   IMAGE_NAME: ghcr.io/lizka19/catty-reminders-app
-  CONTAINER_NAME: catty-reminders-app
+  CONTAINER_NAME: catty-app
 
 jobs:
   deploy:
-    name: Deploy Docker image
+    name: Deploy Docker Compose stack
     runs-on: ubuntu-latest
 
     steps:
-      - name: Prepare deployment variables
-        run: |
-          if [[ ! "$GITHUB_SHA" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "Invalid deployment SHA: $GITHUB_SHA" >&2
-            exit 1
-          fi
-          echo "DEPLOY_SHA=$GITHUB_SHA" >> "$GITHUB_ENV"
-          echo "IMAGE_REF=$IMAGE_NAME:$GITHUB_SHA" >> "$GITHUB_ENV"
-          echo "REMOTE_DOCKER_CONFIG=/tmp/catty-docker-${GITHUB_RUN_ID}" >> "$GITHUB_ENV"
-
       - name: Prepare SSH connection
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -42,120 +33,81 @@ jobs:
           ssh-keyscan -T 10 -p "$SSH_PORT" -H "$SSH_HOST" >> "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
 
-      - name: Log in to GHCR on virtual machine
+      - name: Deploy via SSH
         env:
+          DEPLOY_SHA: ${{ github.sha }}
+          GHCR_ACTOR: ${{ github.actor }}
           GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          test -n "$GHCR_TOKEN"
-          printf '%s' "$GHCR_TOKEN" |
+          # Передаём токен через stdin, а аргументы — как аргументы SSH
+          printf '%s\n' "$GHCR_TOKEN" | \
             ssh -p "$SSH_PORT" -i "$HOME/.ssh/github_actions" \
               -o BatchMode=yes -o IdentitiesOnly=yes \
-              -o StrictHostKeyChecking=yes -o ConnectTimeout=10 \
+              -o StrictHostKeyChecking=yes -o ConnectTimeout=15 \
               "$SSH_USER@$SSH_HOST" \
-              "install -d -m 700 '$REMOTE_DOCKER_CONFIG' && DOCKER_CONFIG='$REMOTE_DOCKER_CONFIG' sudo docker login ghcr.io --username '$GITHUB_ACTOR' --password-stdin"
-
-      - name: Deploy container
-        run: |
-          ssh -p "$SSH_PORT" -i "$HOME/.ssh/github_actions" \
-            -o BatchMode=yes -o IdentitiesOnly=yes \
-            -o StrictHostKeyChecking=yes -o ConnectTimeout=10 \
-            "$SSH_USER@$SSH_HOST" \
-            "bash -s -- '$DEPLOY_SHA' '$IMAGE_REF' '$CONTAINER_NAME' '$REMOTE_DOCKER_CONFIG'" <<'REMOTE_SCRIPT'
+              "bash -s -- '$DEPLOY_SHA' '$IMAGE_NAME' '$APP_DIR' '$CONTAINER_NAME' '$GHCR_ACTOR'" <<'REMOTE_SCRIPT'
           set -Eeuo pipefail
 
           DEPLOY_SHA="$1"
-          IMAGE_REF="$2"
-          CONTAINER_NAME="$3"
-          DOCKER_CONFIG_DIR="$4"
+          IMAGE_NAME="$2"
+          APP_DIR="$3"
+          CONTAINER_NAME="$4"
+          GHCR_ACTOR="$5"
 
-          EXPECTED_IMAGE="ghcr.io/lizka19/catty-reminders-app:$DEPLOY_SHA"
+          # Токен читаем из stdin (первая строка)
+          read -r GHCR_TOKEN
 
           if [[ ! "$DEPLOY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
               echo "Invalid deployment SHA: $DEPLOY_SHA" >&2
               exit 1
           fi
 
-          if [[ "$IMAGE_REF" != "$EXPECTED_IMAGE" ]]; then
-              echo "Unexpected image reference: $IMAGE_REF" >&2
+          if [[ ! -d "$APP_DIR" ]]; then
+              echo "App dir not found: $APP_DIR" >&2
               exit 1
           fi
 
-          case "$DOCKER_CONFIG_DIR" in
-              /tmp/catty-docker-*) ;;
-              *) echo "Invalid Docker configuration path" >&2; exit 1 ;;
-          esac
+          cd "$APP_DIR"
 
-          export DOCKER_CONFIG="$DOCKER_CONFIG_DIR"
+          echo "Logging into GHCR as $GHCR_ACTOR..."
+          printf '%s' "$GHCR_TOKEN" | sudo docker login ghcr.io -u "$GHCR_ACTOR" --password-stdin
 
-          echo "Pulling image: $IMAGE_REF"
-          sudo docker pull "$IMAGE_REF"
+          echo "Generating .env for docker compose..."
+          cat > .env <<EOF
+          MARIADB_ROOT_PASSWORD=mypass
+          MARIADB_DATABASE=catty_reminders
+          MARIADB_USER=catty
+          MARIADB_PASSWORD=cattypass
+          HOST_DB_PORT=3306
+          CONTAINER_DB_PORT=3306
+          HOST_APP_PORT=8181
+          CONTAINER_APP_PORT=8181
+          IMAGE=${IMAGE_NAME}:${DEPLOY_SHA}
+          APP_CONTAINER_NAME=${CONTAINER_NAME}
+          DEPLOY_REF=${DEPLOY_SHA}
+          EOF
 
-          echo "Stopping previous containers on port 8181..."
-          CONTAINERS_ON_PORT=$(sudo docker ps -q --filter "publish=8181" || true)
-          if [[ -n "$CONTAINERS_ON_PORT" ]]; then
-              echo "Containers on 8181: $CONTAINERS_ON_PORT"
-              echo "$CONTAINERS_ON_PORT" | xargs -r sudo docker stop
-              echo "$CONTAINERS_ON_PORT" | xargs -r sudo docker rm
-          fi
+          echo "Pulling image ${IMAGE_NAME}:${DEPLOY_SHA}..."
+          sudo docker pull "${IMAGE_NAME}:${DEPLOY_SHA}"
 
-          if sudo docker ps -a --format '{{.Names}}' | grep -qx "$CONTAINER_NAME"; then
-              sudo docker stop "$CONTAINER_NAME" || true
-              sudo docker rm "$CONTAINER_NAME" || true
-          fi
+          echo "Recreating compose stack..."
+          sudo docker compose --env-file .env up -d --pull always --remove-orphans --force-recreate
 
-          pkill -f '[u]vicorn app\.main:app' 2>/dev/null || true
-
-          for _ in {1..10}; do
-              if ! sudo lsof -i :8181 >/dev/null 2>&1; then
-                  break
-              fi
-              echo "Waiting for port 8181 to be released..."
-              sleep 1
-          done
-
-          if sudo lsof -i :8181 >/dev/null 2>&1; then
-              echo "ERROR: Port 8181 still in use after stopping containers" >&2
-              sudo lsof -i :8181 >&2
-              exit 1
-          fi
-
-          echo "Starting new container from $IMAGE_REF"
-          sudo docker run --detach \
-              --name "$CONTAINER_NAME" \
-              --restart unless-stopped \
-              --publish 8181:8181 \
-              --env DEPLOY_REF="$DEPLOY_SHA" \
-              "$IMAGE_REF"
-
+          echo "Waiting for application to become ready with deployref=${DEPLOY_SHA}..."
           for _ in {1..30}; do
-              if ! sudo docker inspect --format '{{.State.Running}}' "$CONTAINER_NAME" 2>/dev/null | grep -qx true; then
-                  echo "Container exited unexpectedly" >&2
-                  sudo docker logs --tail 50 "$CONTAINER_NAME" >&2 || true
-                  exit 1
-              fi
-
               PAGE="$(curl --silent --fail --location http://127.0.0.1:8181/login || true)"
               if [[ "$PAGE" == *"content=\"$DEPLOY_SHA\""* ]]; then
-                  echo "Deploy completed: $IMAGE_REF"
+                  echo "Deploy completed: $DEPLOY_SHA"
                   exit 0
               fi
-              sleep 1
+              sleep 2
           done
 
           echo "Application did not become ready" >&2
-          sudo docker logs --tail 50 "$CONTAINER_NAME" >&2 || true
+          sudo docker compose logs --tail 80 catty-app >&2 || true
+          sudo docker compose logs --tail 80 db >&2 || true
           exit 1
           REMOTE_SCRIPT
-
-      - name: Remove temporary registry credentials
-        if: always()
-        run: |
-          ssh -p "$SSH_PORT" -i "$HOME/.ssh/github_actions" \
-            -o BatchMode=yes -o IdentitiesOnly=yes \
-            -o StrictHostKeyChecking=yes -o ConnectTimeout=10 \
-            "$SSH_USER@$SSH_HOST" \
-            "case '$REMOTE_DOCKER_CONFIG' in /tmp/catty-docker-*) rm -rf -- '$REMOTE_DOCKER_CONFIG' ;; esac" \
-            || true
 
       - name: Remove SSH private key
         if: always()
