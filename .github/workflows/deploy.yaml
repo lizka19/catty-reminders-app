@@ -124,7 +124,6 @@ jobs:
               --name "$CONTAINER_NAME" \
               --restart unless-stopped \
               --publish 8181:8181 \
-              --env DEPLOY_REF="$DEPLOY_SHA" \
               "$IMAGE_REF"
 
           for _ in {1..30}; do
